@@ -1,5 +1,6 @@
 Hello! This is an express.js project
 
-#Getting Started
+# Getting Started
 
-<code>node .\index.js<code>
+Initializing server on port 5000
+<code>node .\index.js</code>
