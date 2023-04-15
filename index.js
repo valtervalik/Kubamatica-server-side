@@ -7,6 +7,7 @@ const ExpressError = require('./utils/expressError');
 const session = require('express-session');
 const passport = require('passport');
 const passportLocal = require('passport-local');
+const cors = require('cors');
 
 //importar modelos
 const User = require('./models/user');
@@ -40,6 +41,7 @@ const sessionConfig = {
 	},
 };
 app.use(session(sessionConfig));
+app.use(cors());
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -51,7 +53,7 @@ app.get('/', (req, res) => {
 	res.send('Home');
 });
 
-app.use('/', usersRoutes);
+app.use('/users', usersRoutes);
 
 app.all('*', (req, res, next) => {
 	next(new ExpressError('Page Not Found', 404));
