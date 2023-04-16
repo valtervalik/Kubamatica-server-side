@@ -18,6 +18,13 @@ module.exports.registerUser = async (req, res, next) => {
 	}
 };
 
+module.exports.editUser = async (req, res) => {
+	const { id } = req.params;
+	const { ...user } = req.body;
+	const editedUser = await User.findByIdAndUpdate(id, { ...user });
+	res.json({ message: 'Usuario modificado exitosamente' });
+};
+
 module.exports.deleteUser = async (req, res) => {
 	const { id } = req.params;
 	const user = await User.findByIdAndDelete(id);

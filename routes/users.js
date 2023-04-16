@@ -6,7 +6,10 @@ const wrapAsync = require('../utils/catchAsync');
 
 router.route('/').get(wrapAsync(users.getUsers));
 
-router.route('/:id').delete(wrapAsync(users.deleteUser));
+router
+	.route('/:id')
+	.delete(wrapAsync(users.deleteUser))
+	.put(wrapAsync(users.editUser));
 
 router.route('/register').post(wrapAsync(users.registerUser));
 
