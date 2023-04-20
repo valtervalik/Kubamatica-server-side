@@ -13,4 +13,8 @@ router
 
 router.route('/register').post(wrapAsync(users.registerUser));
 
+router.route('/login').post(wrapAsync(users.loginUser));
+
+router.route('/logout').post(wrapAsync(users.logout));
+
 module.exports = router;

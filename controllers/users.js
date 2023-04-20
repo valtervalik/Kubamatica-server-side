@@ -1,4 +1,6 @@
 const User = require('../models/user');
+const passport = require('passport');
+const ExpressError = require('../utils/expressError');
 
 module.exports.getUsers = async (req, res) => {
 	const users = await User.find({});
@@ -29,4 +31,34 @@ module.exports.deleteUser = async (req, res) => {
 	const { id } = req.params;
 	const user = await User.findByIdAndDelete(id);
 	res.json({ message: `Usuario ${user.username} eliminado exitosamente` });
+};
+
+module.exports.loginUser = async (req, res, next) => {
+	passport.authenticate('local', (err, user, info) => {
+		if (err) {
+			return res.status(500).json(err);
+		}
+		if (!user) {
+			return res.status(400).json(info);
+		}
+
+		req.login(user, (err) => {
+			if (err) {
+				return res.status(500).json(err);
+			}
+
+			res.json({
+				username: user.username,
+				role: user.role,
+				id: user._id,
+				message: `Inicio de sesión exitoso. Bienvenido ${user.username}`,
+			});
+		});
+	})(req, res, next);
+};
+
+module.exports.logout = (req, res, next) => {
+	req.logout();
+	res.json({ message: 'Gracias por venir. Vuelva pronto.' });
+	next();
 };

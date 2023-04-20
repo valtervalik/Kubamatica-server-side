@@ -6,8 +6,9 @@ const port = 5000;
 const ExpressError = require('./utils/expressError');
 const session = require('express-session');
 const passport = require('passport');
-const passportLocal = require('passport-local');
+const passportLocal = require('passport-local').Strategy;
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 
 //importar modelos
 const User = require('./models/user');
@@ -29,7 +30,7 @@ async function main() {
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 const sessionConfig = {
-	name: 'session',
+	name: 'kubamaticasession',
 	secret: 'thisshouldbeabettersecret',
 	resave: false,
 	saveUninitialized: true,
@@ -41,8 +42,13 @@ const sessionConfig = {
 	},
 };
 app.use(session(sessionConfig));
-app.use(cors());
-
+app.use(cookieParser('thisshouldbeabettersecret'));
+app.use(
+	cors({
+		origin: 'http://localhost:3000',
+		credentials: true,
+	})
+);
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new passportLocal(User.authenticate()));
