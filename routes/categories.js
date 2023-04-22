@@ -8,4 +8,9 @@ router
 	.get(wrapAsync(categories.getCategories))
 	.post(wrapAsync(categories.addCategory));
 
+router
+	.route('/:id')
+	.put(wrapAsync(categories.editCategory))
+	.delete(wrapAsync(categories.deleteCategory));
+
 module.exports = router;
