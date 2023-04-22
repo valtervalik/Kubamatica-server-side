@@ -15,6 +15,7 @@ const User = require('./models/user');
 
 //importar rutas
 const usersRoutes = require('./routes/users');
+const categoriesRoutes = require('./routes/categories');
 
 //connecting to the mongo database
 const mongoose = require('mongoose');
@@ -60,6 +61,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/users', usersRoutes);
+app.use('/categories', categoriesRoutes);
 
 app.all('*', (req, res, next) => {
 	next(new ExpressError('Page Not Found', 404));

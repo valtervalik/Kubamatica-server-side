@@ -1,6 +1,5 @@
 const User = require('../models/user');
 const passport = require('passport');
-const ExpressError = require('../utils/expressError');
 
 module.exports.getUsers = async (req, res) => {
 	const users = await User.find({});
