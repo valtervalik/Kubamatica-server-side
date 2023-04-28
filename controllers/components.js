@@ -1,6 +1,16 @@
 const Category = require('../models/category');
 const Component = require('../models/component');
 
+module.exports.getCategoryComponents = async (req, res) => {
+	const { category } = req.params;
+	const components = await Component.find({ category: category });
+	if (!components) {
+		res.json({ error: `No se encontraron componentes` });
+	} else {
+		res.json(components);
+	}
+};
+
 module.exports.createComponent = async (req, res) => {
 	const category = await Category.findOne({ category: req.body.category });
 	if (!category) {

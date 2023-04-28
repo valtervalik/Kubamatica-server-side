@@ -7,7 +7,10 @@ const ComponentSchema = new Schema({
 	serial: String,
 	properties: String,
 	category: String,
-	status: String,
+	status: {
+		type: String,
+		enum: ['Nuevo', 'Poco Uso', 'Usado'],
+	},
 	box: Number,
 	price: Number,
 	currency: {
