@@ -25,3 +25,15 @@ module.exports.createComponent = async (req, res) => {
 		});
 	}
 };
+
+module.exports.deleteComponent = async (req, res) => {
+	const { category, id } = req.params;
+	const component = await Component.findByIdAndDelete(id);
+	const delcategory = await Category.findOneAndUpdate(
+		{ category: category },
+		{
+			$pull: { components: id },
+		}
+	);
+	res.json({ message: `Componente eliminado exitosamente` });
+};

@@ -7,4 +7,6 @@ router.route('/').post(wrapAsync(components.createComponent));
 
 router.route('/:category').get(wrapAsync(components.getCategoryComponents));
 
+router.route('/:category/:id').delete(wrapAsync(components.deleteComponent));
+
 module.exports = router;
