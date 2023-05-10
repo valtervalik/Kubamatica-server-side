@@ -14,3 +14,10 @@ module.exports.createRepair = async (req, res) => {
 	await repair.save();
 	res.json({ message: `Servicio de reparación añadido exitosamente` });
 };
+
+module.exports.editRepair = async (req, res) => {
+	const { id } = req.params;
+	const { ...repair } = req.body;
+	const editRepair = await Repair.findByIdAndUpdate(id, { ...repair });
+	res.json({ message: 'Servicio de reparación modificado exitosamente' });
+};

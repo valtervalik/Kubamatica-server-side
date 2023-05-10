@@ -8,4 +8,6 @@ router
 	.get(wrapAsync(repairs.getRepairs))
 	.post(wrapAsync(repairs.createRepair));
 
+router.route('/:id').put(wrapAsync(repairs.editRepair));
+
 module.exports = router;

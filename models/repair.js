@@ -5,7 +5,7 @@ const RepairSchema = new Schema({
 	client: String,
 	phone: String,
 	technic: String,
-	warranty: String,
+	warranty: Number,
 	device: String,
 	description: String,
 	box: Number,
