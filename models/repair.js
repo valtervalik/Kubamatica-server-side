@@ -9,7 +9,7 @@ const RepairSchema = new Schema({
 	device: String,
 	description: String,
 	box: Number,
-	date: String,
+	date: { year: Number, month: Number, day: Number, dayOfWeek: String },
 	price: Number,
 	currency: {
 		type: String,
