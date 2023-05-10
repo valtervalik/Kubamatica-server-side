@@ -7,6 +7,9 @@ router.route('/').post(wrapAsync(components.createComponent));
 
 router.route('/:category').get(wrapAsync(components.getCategoryComponents));
 
-router.route('/:category/:id').delete(wrapAsync(components.deleteComponent));
+router
+	.route('/:category/:id')
+	.put(wrapAsync(components.editComponent))
+	.delete(wrapAsync(components.deleteComponent));
 
 module.exports = router;

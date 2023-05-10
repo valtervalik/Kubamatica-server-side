@@ -26,6 +26,13 @@ module.exports.createComponent = async (req, res) => {
 	}
 };
 
+module.exports.editComponent = async (req, res) => {
+	const { id } = req.params;
+	const { ...component } = req.body;
+	const newComponent = await Component.findByIdAndUpdate(id, { ...component });
+	res.json({ message: `Componente modificado exitosamente` });
+};
+
 module.exports.deleteComponent = async (req, res) => {
 	const { category, id } = req.params;
 	const component = await Component.findByIdAndDelete(id);
