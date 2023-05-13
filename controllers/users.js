@@ -57,7 +57,7 @@ module.exports.loginUser = async (req, res, next) => {
 };
 
 module.exports.logout = (req, res, next) => {
-	req.logout();
+	// req.logout();
 	res.json({ message: 'Gracias por venir. Vuelva pronto.' });
-	next();
+	// next();
 };

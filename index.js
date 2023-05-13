@@ -77,6 +77,11 @@ app.use((err, req, res, next) => {
 	res.status(statusCode).json({ error: err });
 });
 
+app.use(function (err, req, res, next) {
+	console.error(err.stack);
+	res.status(500).send('Algo salió mal');
+});
+
 app.listen(port, (req, res) => {
 	console.log(`Server is running on port ${port}`);
 });

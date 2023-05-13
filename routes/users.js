@@ -15,6 +15,6 @@ router.route('/register').post(wrapAsync(users.registerUser));
 
 router.route('/login').post(wrapAsync(users.loginUser));
 
-router.route('/logout').post(wrapAsync(users.logout));
+router.route('/logout').post(users.logout);
 
 module.exports = router;
