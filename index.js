@@ -18,6 +18,7 @@ const usersRoutes = require('./routes/users');
 const categoriesRoutes = require('./routes/categories');
 const componentsRoutes = require('./routes/components');
 const repairsRoutes = require('./routes/repairs');
+const purchasesRoutes = require('./routes/purchases');
 
 //connecting to the mongo database
 const mongoose = require('mongoose');
@@ -66,6 +67,7 @@ app.use('/users', usersRoutes);
 app.use('/categories', categoriesRoutes);
 app.use('/components', componentsRoutes);
 app.use('/repairs', repairsRoutes);
+app.use('/purchases', purchasesRoutes);
 
 app.all('*', (req, res, next) => {
 	next(new ExpressError('Page Not Found', 404));
