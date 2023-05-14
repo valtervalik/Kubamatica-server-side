@@ -2,6 +2,11 @@ const Purchase = require('../models/purchase');
 const Component = require('../models/component');
 const Category = require('../models/category');
 
+module.exports.getPurchases = async (req, res) => {
+	const purchases = await Purchase.find({});
+	res.json(purchases);
+};
+
 module.exports.createPurchase = async (req, res) => {
 	const purchase = new Purchase(req.body);
 	const categoryFound = await Category.findOne({ category: req.body.category });
