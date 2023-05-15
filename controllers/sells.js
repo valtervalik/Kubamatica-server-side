@@ -25,3 +25,10 @@ module.exports.createSell = async (req, res) => {
 
 	res.json({ message: `Venta añadida exitosamente` });
 };
+
+module.exports.editSell = async (req, res) => {
+	const { id } = req.params;
+	const { ...sellBody } = req.body;
+	const sell = await Sell.findByIdAndUpdate(id, { ...sellBody });
+	res.json({ message: `Servicio de venta modificado exitosamente` });
+};
