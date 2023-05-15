@@ -4,7 +4,10 @@ const { Schema } = mongoose;
 const ComponentSchema = new Schema({
 	brand: String,
 	model: String,
-	serial: String,
+	serial: {
+		type: String,
+		unique: true,
+	},
 	properties: String,
 	category: String,
 	status: {

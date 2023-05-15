@@ -8,4 +8,6 @@ router
 	.get(purchases.getPurchases)
 	.post(wrapAsync(purchases.createPurchase));
 
+router.route('/:id').put(wrapAsync(purchases.editPurchase));
+
 module.exports = router;

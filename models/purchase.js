@@ -13,7 +13,10 @@ const PurchaseSchema = new Schema({
 	box: Number,
 	brand: String,
 	model: String,
-	serial: String,
+	serial: {
+		type: String,
+		unique: true,
+	},
 	properties: String,
 	date: { year: Number, month: Number, day: Number, dayOfWeek: String },
 	price: Number,
