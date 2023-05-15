@@ -2,6 +2,11 @@ const Sell = require('../models/sell');
 const Component = require('../models/component');
 const Category = require('../models/category');
 
+module.exports.getSells = async (req, res) => {
+	const sells = await Sell.find({});
+	res.json(sells);
+};
+
 module.exports.createSell = async (req, res) => {
 	const newSell = new Sell(req.body);
 
