@@ -46,7 +46,7 @@ const sessionConfig = {
 	},
 };
 app.use(session(sessionConfig));
-app.use(cookieParser('thisshouldbeabettersecret'));
+// app.use(cookieParser('thisshouldbeabettersecret'));
 app.use(
 	cors({
 		origin: 'http://localhost:3000',
@@ -69,20 +69,20 @@ app.use('/components', componentsRoutes);
 app.use('/repairs', repairsRoutes);
 app.use('/purchases', purchasesRoutes);
 
-app.all('*', (req, res, next) => {
-	next(new ExpressError('Page Not Found', 404));
-});
+// app.all('*', (req, res, next) => {
+// 	next(new ExpressError('Page Not Found', 404));
+// });
 
-app.use((err, req, res, next) => {
-	const { statusCode = 500 } = err;
-	if (!err.message) err.message = 'Something Went Wrong';
-	res.status(statusCode).json({ error: err });
-});
+// app.use((err, req, res, next) => {
+// 	const { statusCode = 500 } = err;
+// 	if (!err.message) err.message = 'Something Went Wrong';
+// 	res.status(statusCode).json({ error: err });
+// });
 
-app.use(function (err, req, res, next) {
-	console.error(err.stack);
-	res.status(500).send('Algo salió mal');
-});
+// app.use(function (err, req, res, next) {
+// 	console.error(err.stack);
+// 	res.status(500).send('Algo salió mal');
+// });
 
 app.listen(port, (req, res) => {
 	console.log(`Server is running on port ${port}`);

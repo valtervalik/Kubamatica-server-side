@@ -46,6 +46,8 @@ module.exports.loginUser = async (req, res, next) => {
 				return res.status(500).json(err);
 			}
 
+			req.session.user = user;
+
 			res.json({
 				username: user.username,
 				role: user.role,
