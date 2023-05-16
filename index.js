@@ -71,21 +71,6 @@ app.use('/repairs', repairsRoutes);
 app.use('/purchases', purchasesRoutes);
 app.use('/sells', sellsRoutes);
 
-// app.all('*', (req, res, next) => {
-// 	next(new ExpressError('Page Not Found', 404));
-// });
-
-// app.use((err, req, res, next) => {
-// 	const { statusCode = 500 } = err;
-// 	if (!err.message) err.message = 'Something Went Wrong';
-// 	res.status(statusCode).json({ error: err });
-// });
-
-// app.use(function (err, req, res, next) {
-// 	console.error(err.stack);
-// 	res.status(500).send('Algo salió mal');
-// });
-
 app.listen(port, (req, res) => {
 	console.log(`Server is running on port ${port}`);
 });
