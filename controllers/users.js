@@ -26,6 +26,26 @@ module.exports.editUser = async (req, res) => {
 	res.json({ message: 'Usuario modificado exitosamente' });
 };
 
+module.exports.changePassword = async (req, res) => {
+	User.findByUsername(req.body.username, (err, user) => {
+		if (err) {
+			res.status(400).json(err);
+		} else {
+			user.changePassword(
+				req.body.password,
+				req.body.newpassword,
+				function (err) {
+					if (err) {
+						res.status(400).json(err);
+					} else {
+						res.json({ message: 'Contraseña actualizada exitosamente' });
+					}
+				}
+			);
+		}
+	});
+};
+
 module.exports.deleteUser = async (req, res) => {
 	const { id } = req.params;
 	const user = await User.findByIdAndDelete(id);
@@ -48,7 +68,7 @@ module.exports.loginUser = async (req, res, next) => {
 
 			req.session.user = user;
 
-			res.json({
+			res.status(200).json({
 				username: user.username,
 				role: user.role,
 				id: user._id,

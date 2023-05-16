@@ -11,6 +11,8 @@ router
 	.delete(wrapAsync(users.deleteUser))
 	.put(wrapAsync(users.editUser));
 
+router.route('/changepassword').post(wrapAsync(users.changePassword));
+
 router.route('/register').post(wrapAsync(users.registerUser));
 
 router.route('/login').post(wrapAsync(users.loginUser));
