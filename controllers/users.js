@@ -1,5 +1,6 @@
 const User = require('../models/user');
 const passport = require('passport');
+const nodemailer = require('nodemailer');
 
 module.exports.getUsers = async (req, res) => {
 	const users = await User.find({});
@@ -27,7 +28,7 @@ module.exports.editUser = async (req, res) => {
 };
 
 module.exports.changePassword = async (req, res) => {
-	User.findByUsername(req.body.username, (err, user) => {
+	await User.findByUsername(req.body.username, (err, user) => {
 		if (err) {
 			res.status(400).json(err);
 		} else {
@@ -44,6 +45,85 @@ module.exports.changePassword = async (req, res) => {
 			);
 		}
 	});
+};
+
+module.exports.recoverPassword = async (req, res) => {
+	function generarContrasena(longitud) {
+		var caracteres =
+			'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
+		var contrasena = '';
+		var tieneMayuscula = false;
+		var tieneNumero = false;
+		var tieneCaracterEspecial = false;
+		while (!tieneMayuscula || !tieneNumero || !tieneCaracterEspecial) {
+			contrasena = '';
+			for (var i = 0; i < longitud; i++) {
+				var caracter = caracteres.charAt(
+					Math.floor(Math.random() * caracteres.length)
+				);
+				contrasena += caracter;
+				if (caracter.match(/[A-Z]/)) {
+					tieneMayuscula = true;
+				}
+				if (caracter.match(/[0-9]/)) {
+					tieneNumero = true;
+				}
+				if (caracter.match(/[!@#$%^&*()]/)) {
+					tieneCaracterEspecial = true;
+				}
+			}
+		}
+		return contrasena;
+	}
+	const { email } = req.body;
+	const foundUser = await User.findOne({ email: email });
+	if (!foundUser) {
+		res.json({
+			error: `Lo sentimos, su correo no pertenece a nuestra empresa`,
+		});
+	} else {
+		const contrasena = await generarContrasena(25);
+
+		let transporter = nodemailer.createTransport({
+			service: 'gmail',
+			auth: {
+				user: 'tallerkubamatica@gmail.com',
+				pass: 'dodurjwxyusensyw',
+			},
+		});
+
+		let mailOptions = {
+			from: 'tallerkubamatica@gmail.com',
+			to: foundUser.email,
+			subject: 'Nueva Contraseña',
+			text: `Puede iniciar sesión en Kubamatica con la siguiente contraseña: ${contrasena}`,
+		};
+
+		await foundUser.setPassword(contrasena, function (error) {
+			if (error) {
+				res.status(400).json({
+					error:
+						'Lo sentimos. No fue posible actualizar su contraseña. Inténtelo de nuevo',
+					error,
+				});
+			} else {
+				foundUser.save();
+				transporter.sendMail(mailOptions, function (error, info) {
+					if (error) {
+						res.json({
+							error: `No se pudo enviar un correo a ${foundUser.email}`,
+							error,
+						});
+					} else {
+						res.json({
+							message: `Contraseña actualizada exitosamente. Compruebe su correo para obtener su nueva contraseña`,
+							info,
+						});
+					}
+				});
+			}
+		});
+	}
 };
 
 module.exports.deleteUser = async (req, res) => {

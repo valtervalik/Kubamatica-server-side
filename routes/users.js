@@ -13,6 +13,8 @@ router
 
 router.route('/changepassword').post(wrapAsync(users.changePassword));
 
+router.route('/recoverpassword').post(wrapAsync(users.recoverPassword));
+
 router.route('/register').post(wrapAsync(users.registerUser));
 
 router.route('/login').post(wrapAsync(users.loginUser));
