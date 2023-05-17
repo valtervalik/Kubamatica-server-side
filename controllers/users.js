@@ -1,6 +1,7 @@
 const User = require('../models/user');
 const passport = require('passport');
 const nodemailer = require('nodemailer');
+const forge = require('node-forge');
 
 module.exports.getUsers = async (req, res) => {
 	const users = await User.find({});
@@ -146,14 +147,35 @@ module.exports.loginUser = async (req, res, next) => {
 				return res.status(500).json(err);
 			}
 
-			req.session.user = user;
+			// Generate a random key and IV
+			const key = forge.random.getBytesSync(16);
+			const iv = forge.random.getBytesSync(16);
 
-			res.status(200).json({
-				username: user.username,
-				role: user.role,
-				id: user._id,
-				message: `Inicio de sesión exitoso. Bienvenido ${user.username}`,
-			});
+			// Create a new cipher using the key and IV
+			const cipher = forge.cipher.createCipher('AES-CBC', key);
+			cipher.start({ iv: iv });
+
+			// Encrypt the data
+			cipher.update(
+				forge.util.createBuffer(
+					JSON.stringify({
+						username: user.username,
+						role: user.role,
+						id: user._id,
+					})
+				)
+			);
+			cipher.finish();
+			const encrypted = cipher.output.getBytes();
+
+			res
+				.status(200)
+				.json({
+					encrypted,
+					key,
+					iv,
+					message: `Inicio de sesión exitoso. Bienvenido ${user.username}`,
+				});
 		});
 	})(req, res, next);
 };
