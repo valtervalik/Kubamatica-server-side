@@ -59,50 +59,57 @@ module.exports.editPurchase = async (req, res) => {
 
 	const componentPurchased = await Component.findOne({ serial: serial });
 
-	if (category !== componentPurchased.category) {
-		const pullCategory = await Category.findOneAndUpdate(
-			{ category: componentPurchased.category },
-			{
-				$pull: { components: componentPurchased._id },
-			}
-		);
-
-		const newCategory = await Category.findOne({ category: category });
-		newCategory.components.push(componentPurchased);
-		await newCategory.save();
-
-		const updatedCategoryComponent = await Component.findByIdAndUpdate(
-			componentPurchased._id,
-			{
-				brand,
-				model,
-				serial,
-				properties,
-				category,
-				status,
-				box,
-				price,
-				currency,
-			}
-		);
+	if (!componentPurchased) {
+		await Purchase.findByIdAndUpdate(id, { ...purchaseBody });
+		res.json({
+			message: `Compra modificada exitosamente`,
+		});
 	} else {
-		const updatedComponent = await Component.findByIdAndUpdate(
-			componentPurchased._id,
-			{
-				brand,
-				model,
-				serial,
-				properties,
-				category,
-				status,
-				box,
-				price,
-				currency,
-			}
-		);
+		if (category !== componentPurchased.category) {
+			const pullCategory = await Category.findOneAndUpdate(
+				{ category: componentPurchased.category },
+				{
+					$pull: { components: componentPurchased._id },
+				}
+			);
+
+			const newCategory = await Category.findOne({ category: category });
+			newCategory.components.push(componentPurchased);
+			await newCategory.save();
+
+			const updatedCategoryComponent = await Component.findByIdAndUpdate(
+				componentPurchased._id,
+				{
+					brand,
+					model,
+					serial,
+					properties,
+					category,
+					status,
+					box,
+					price,
+					currency,
+				}
+			);
+		} else {
+			const updatedComponent = await Component.findByIdAndUpdate(
+				componentPurchased._id,
+				{
+					brand,
+					model,
+					serial,
+					properties,
+					category,
+					status,
+					box,
+					price,
+					currency,
+				}
+			);
+		}
+		const purchase = await Purchase.findByIdAndUpdate(id, { ...purchaseBody });
+		res.json({
+			message: `Compra modificada exitosamente`,
+		});
 	}
-	const purchase = await Purchase.findByIdAndUpdate(id, { ...purchaseBody });
-	res.json({
-		message: `Compra modificada exitosamente`,
-	});
 };
