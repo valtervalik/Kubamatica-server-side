@@ -211,6 +211,8 @@ module.exports.loginUser = async (req, res, next) => {
 
 module.exports.logout = (req, res, next) => {
 	// req.logout();
-	res.json({ message: 'Gracias por venir. Vuelva pronto.' });
+	res.json({
+		message: 'Gracias por usar nuestro servicio. Lo esperamos pronto.',
+	});
 	// next();
 };
