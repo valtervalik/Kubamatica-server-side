@@ -1,5 +1,6 @@
 const Category = require('../models/category');
 const Component = require('../models/component');
+const Purchase = require('../models/purchase');
 
 module.exports.getCategoryComponents = async (req, res) => {
 	const { category } = req.params;
@@ -41,6 +42,10 @@ module.exports.deleteComponent = async (req, res) => {
 		{
 			$pull: { components: id },
 		}
+	);
+	const delpurchase = await Purchase.findOneAndUpdate(
+		{ serial: component.serial },
+		{ $pull: { components: id } }
 	);
 	res.json({ message: `Componente eliminado exitosamente` });
 };

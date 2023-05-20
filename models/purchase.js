@@ -24,6 +24,12 @@ const PurchaseSchema = new Schema({
 		type: String,
 		enum: ['cup', 'usd'],
 	},
+	components: [
+		{
+			type: Schema.Types.ObjectId,
+			ref: 'Component',
+		},
+	],
 });
 
 module.exports = mongoose.model('Purchase', PurchaseSchema);

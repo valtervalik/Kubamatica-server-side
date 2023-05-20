@@ -34,6 +34,7 @@ module.exports.createPurchase = async (req, res) => {
 		currency,
 	});
 	categoryFound.components.push(component);
+	purchase.components.push(component);
 	await component.save();
 	await categoryFound.save();
 	await purchase.save();
@@ -57,14 +58,17 @@ module.exports.editPurchase = async (req, res) => {
 		currency,
 	} = req.body;
 
-	const componentPurchased = await Component.findOne({ serial: serial });
+	const purchase = await Purchase.findById(id).populate('components');
 
-	if (!componentPurchased) {
+	if (!purchase.components.length) {
 		await Purchase.findByIdAndUpdate(id, { ...purchaseBody });
 		res.json({
 			message: `Compra modificada exitosamente`,
 		});
 	} else {
+		const componentPurchased = await Component.findById(
+			purchase.components[0]._id
+		);
 		if (category !== componentPurchased.category) {
 			const pullCategory = await Category.findOneAndUpdate(
 				{ category: componentPurchased.category },
@@ -107,7 +111,7 @@ module.exports.editPurchase = async (req, res) => {
 				}
 			);
 		}
-		const purchase = await Purchase.findByIdAndUpdate(id, { ...purchaseBody });
+		await Purchase.findByIdAndUpdate(id, { ...purchaseBody });
 		res.json({
 			message: `Compra modificada exitosamente`,
 		});
