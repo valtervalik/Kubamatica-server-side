@@ -17,7 +17,15 @@ module.exports.createComponent = async (req, res) => {
 	if (!category) {
 		res.json({ error: `La categoría no existe` });
 	} else {
-		const component = new Component(req.body);
+		// Crear una copia de req.body
+		const body = { ...req.body };
+		// Aplicar trim() a cada valor de cadena en body
+		Object.keys(body).forEach((key) => {
+			if (typeof body[key] === 'string') {
+				body[key] = body[key].trim();
+			}
+		});
+		const component = new Component(body);
 		category.components.push(component);
 		await component.save();
 		await category.save();
@@ -29,8 +37,15 @@ module.exports.createComponent = async (req, res) => {
 
 module.exports.editComponent = async (req, res) => {
 	const { id } = req.params;
-	const { ...component } = req.body;
-	const newComponent = await Component.findByIdAndUpdate(id, { ...component });
+	// Crear una copia de req.body
+	const body = { ...req.body };
+	// Aplicar trim() a cada valor de cadena en body
+	Object.keys(body).forEach((key) => {
+		if (typeof body[key] === 'string') {
+			body[key] = body[key].trim();
+		}
+	});
+	const newComponent = await Component.findByIdAndUpdate(id, body);
 	res.json({ message: `Componente modificado exitosamente` });
 };
 

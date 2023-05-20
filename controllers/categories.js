@@ -6,15 +6,29 @@ module.exports.getCategories = async (req, res) => {
 };
 
 module.exports.addCategory = async (req, res) => {
-	const newCategory = new Category(req.body);
+	// Crear una copia de req.body
+	const body = { ...req.body };
+	// Aplicar trim() a cada valor de cadena en body
+	Object.keys(body).forEach((key) => {
+		if (typeof body[key] === 'string') {
+			body[key] = body[key].trim();
+		}
+	});
+	// Crear un nuevo objeto Category con los valores modificados
+	const newCategory = new Category(body);
 	await newCategory.save();
 	res.json({ message: `Categoría ${req.body.category} añadida exitosamente` });
 };
 
 module.exports.editCategory = async (req, res) => {
 	const { id } = req.params;
-	const { ...categoryBody } = req.body;
-	const category = await Category.findByIdAndUpdate(id, { ...categoryBody });
+	const body = { ...req.body };
+	Object.keys(body).forEach((key) => {
+		if (typeof body[key] === 'string') {
+			body[key] = body[key].trim();
+		}
+	});
+	const category = await Category.findByIdAndUpdate(id, body);
 	res.json({
 		message: `Categoría ${
 			category.category[0].toUpperCase() + category.category.substring(1)

@@ -8,7 +8,14 @@ module.exports.getSells = async (req, res) => {
 };
 
 module.exports.createSell = async (req, res) => {
-	const newSell = new Sell(req.body);
+	const body = { ...req.body };
+	// Aplicar trim() a cada valor de cadena en body
+	Object.keys(body).forEach((key) => {
+		if (typeof body[key] === 'string') {
+			body[key] = body[key].trim();
+		}
+	});
+	const newSell = new Sell(body);
 
 	const deletedComponent = await Component.findOneAndDelete({
 		serial: req.body.serial,
@@ -21,6 +28,11 @@ module.exports.createSell = async (req, res) => {
 		}
 	);
 
+	const delpurchase = await Purchase.findOneAndUpdate(
+		{ serial: deletedComponent.serial },
+		{ $pull: { components: deletedComponent._id } }
+	);
+
 	await newSell.save();
 
 	res.json({ message: `Venta añadida exitosamente` });
@@ -28,7 +40,13 @@ module.exports.createSell = async (req, res) => {
 
 module.exports.editSell = async (req, res) => {
 	const { id } = req.params;
-	const { ...sellBody } = req.body;
-	const sell = await Sell.findByIdAndUpdate(id, { ...sellBody });
+	const body = { ...req.body };
+	// Aplicar trim() a cada valor de cadena en body
+	Object.keys(body).forEach((key) => {
+		if (typeof body[key] === 'string') {
+			body[key] = body[key].trim();
+		}
+	});
+	const sell = await Sell.findByIdAndUpdate(id, body);
 	res.json({ message: `Servicio de venta modificado exitosamente` });
 };

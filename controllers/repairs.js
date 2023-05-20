@@ -10,14 +10,27 @@ module.exports.getRepairs = async (req, res) => {
 };
 
 module.exports.createRepair = async (req, res) => {
-	const repair = new Repair(req.body);
+	const body = { ...req.body };
+	// Aplicar trim() a cada valor de cadena en body
+	Object.keys(body).forEach((key) => {
+		if (typeof body[key] === 'string') {
+			body[key] = body[key].trim();
+		}
+	});
+	const repair = new Repair(body);
 	await repair.save();
 	res.json({ message: `Servicio de reparación añadido exitosamente` });
 };
 
 module.exports.editRepair = async (req, res) => {
 	const { id } = req.params;
-	const { ...repair } = req.body;
-	const editRepair = await Repair.findByIdAndUpdate(id, { ...repair });
+	const body = { ...req.body };
+	// Aplicar trim() a cada valor de cadena en body
+	Object.keys(body).forEach((key) => {
+		if (typeof body[key] === 'string') {
+			body[key] = body[key].trim();
+		}
+	});
+	const editRepair = await Repair.findByIdAndUpdate(id, body);
 	res.json({ message: 'Servicio de reparación modificado exitosamente' });
 };

@@ -8,7 +8,15 @@ module.exports.getPurchases = async (req, res) => {
 };
 
 module.exports.createPurchase = async (req, res) => {
-	const purchase = new Purchase(req.body);
+	// Crear una copia de req.body
+	const body = { ...req.body };
+	// Aplicar trim() a cada valor de cadena en body
+	Object.keys(body).forEach((key) => {
+		if (typeof body[key] === 'string') {
+			body[key] = body[key].trim();
+		}
+	});
+	const purchase = new Purchase(body);
 	const categoryFound = await Category.findOne({ category: req.body.category });
 	const {
 		brand,
@@ -23,10 +31,10 @@ module.exports.createPurchase = async (req, res) => {
 	} = req.body;
 
 	const component = new Component({
-		brand,
-		model,
-		serial,
-		properties,
+		brand: brand.trim(),
+		model: model.trim(),
+		serial: serial.trim(),
+		properties: properties.trim(),
 		category,
 		status,
 		box,
@@ -45,7 +53,14 @@ module.exports.createPurchase = async (req, res) => {
 
 module.exports.editPurchase = async (req, res) => {
 	const { id } = req.params;
-	const { ...purchaseBody } = req.body;
+	// Crear una copia de req.body
+	const body = { ...req.body };
+	// Aplicar trim() a cada valor de cadena en body
+	Object.keys(body).forEach((key) => {
+		if (typeof body[key] === 'string') {
+			body[key] = body[key].trim();
+		}
+	});
 	const {
 		brand,
 		model,
@@ -61,7 +76,7 @@ module.exports.editPurchase = async (req, res) => {
 	const purchase = await Purchase.findById(id).populate('components');
 
 	if (!purchase.components.length) {
-		await Purchase.findByIdAndUpdate(id, { ...purchaseBody });
+		await Purchase.findByIdAndUpdate(id, body);
 		res.json({
 			message: `Compra modificada exitosamente`,
 		});
@@ -84,10 +99,10 @@ module.exports.editPurchase = async (req, res) => {
 			const updatedCategoryComponent = await Component.findByIdAndUpdate(
 				componentPurchased._id,
 				{
-					brand,
-					model,
-					serial,
-					properties,
+					brand: brand.trim(),
+					model: model.trim(),
+					serial: serial.trim(),
+					properties: properties.trim(),
 					category,
 					status,
 					box,
@@ -99,10 +114,10 @@ module.exports.editPurchase = async (req, res) => {
 			const updatedComponent = await Component.findByIdAndUpdate(
 				componentPurchased._id,
 				{
-					brand,
-					model,
-					serial,
-					properties,
+					brand: brand.trim(),
+					model: model.trim(),
+					serial: serial.trim(),
+					properties: properties.trim(),
 					category,
 					status,
 					box,
@@ -111,7 +126,7 @@ module.exports.editPurchase = async (req, res) => {
 				}
 			);
 		}
-		await Purchase.findByIdAndUpdate(id, { ...purchaseBody });
+		await Purchase.findByIdAndUpdate(id, body);
 		res.json({
 			message: `Compra modificada exitosamente`,
 		});

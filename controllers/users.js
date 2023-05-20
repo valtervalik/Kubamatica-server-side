@@ -11,8 +11,14 @@ module.exports.getUsers = async (req, res) => {
 module.exports.registerUser = async (req, res, next) => {
 	try {
 		const { email, username, role, fullname, phone, password } = req.body;
-		const user = new User({ role, fullname, phone, email, username });
-		const registeredUser = await User.register(user, password);
+		const user = new User({
+			role: role.trim(),
+			fullname: fullname.trim(),
+			phone: phone.trim(),
+			email: email.trim(),
+			username: username.trim(),
+		});
+		const registeredUser = await User.register(user, password.trim());
 		res.json({
 			message: `Usuario ${registeredUser.username} añadido exitosamente`,
 		});
@@ -23,8 +29,14 @@ module.exports.registerUser = async (req, res, next) => {
 
 module.exports.editUser = async (req, res) => {
 	const { id } = req.params;
-	const { ...user } = req.body;
-	const editedUser = await User.findByIdAndUpdate(id, { ...user });
+	const body = { ...req.body };
+	// Aplicar trim() a cada valor de cadena en body
+	Object.keys(body).forEach((key) => {
+		if (typeof body[key] === 'string') {
+			body[key] = body[key].trim();
+		}
+	});
+	const editedUser = await User.findByIdAndUpdate(id, body);
 	res.json({ message: 'Usuario modificado exitosamente' });
 };
 
@@ -34,8 +46,8 @@ module.exports.changePassword = async (req, res) => {
 			res.status(400).json(err);
 		} else {
 			user.changePassword(
-				req.body.password,
-				req.body.newpassword,
+				req.body.password.trim(),
+				req.body.newpassword.trim(),
 				function (err) {
 					if (err) {
 						res.status(400).json(err);
@@ -77,7 +89,7 @@ module.exports.recoverPassword = async (req, res) => {
 		return contrasena;
 	}
 	const { email } = req.body;
-	const foundUser = await User.findOne({ email: email });
+	const foundUser = await User.findOne({ email: email.trim() });
 	if (!foundUser) {
 		res.json({
 			error: `Lo sentimos, su correo no pertenece a nuestra empresa`,
