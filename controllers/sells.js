@@ -1,6 +1,7 @@
 const Sell = require('../models/sell');
 const Component = require('../models/component');
 const Category = require('../models/category');
+const Purchase = require('../models/purchase');
 
 module.exports.getSells = async (req, res) => {
 	const sells = await Sell.find({});
