@@ -3,7 +3,6 @@ const app = express();
 const port = 5000;
 
 //importar paquetes
-// const ExpressError = require('./utils/expressError');
 const session = require('express-session');
 const passport = require('passport');
 const passportLocal = require('passport-local').Strategy;
