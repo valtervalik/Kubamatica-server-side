@@ -10,7 +10,15 @@ module.exports.getUsers = async (req, res) => {
 
 module.exports.registerUser = async (req, res, next) => {
 	try {
-		const { email, username, role, fullname, phone, password } = req.body;
+		const {
+			email,
+			username,
+			role,
+			fullname,
+			phone,
+			password,
+			confirmpassword,
+		} = req.body;
 		const user = new User({
 			role: role.trim(),
 			fullname: fullname.trim(),

@@ -115,4 +115,5 @@ module.exports.userSchema = joi.object({
 	role: joi.string().required().escapeHTML(),
 	email: joi.string().required().escapeHTML(),
 	password: joi.string().required().escapeHTML(),
+	confirmpassword: joi.string().required().escapeHTML(),
 });
