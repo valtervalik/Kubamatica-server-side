@@ -7,7 +7,7 @@ const { validateRepair } = require('../middleware');
 router
 	.route('/')
 	.get(wrapAsync(repairs.getRepairs))
-	.post(wrapAsync(validateRepair, repairs.createRepair));
+	.post(validateRepair, wrapAsync(repairs.createRepair));
 
 router.route('/:id').put(validateRepair, wrapAsync(repairs.editRepair));
 
