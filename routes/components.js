@@ -2,14 +2,17 @@ const express = require('express');
 const router = express.Router();
 const wrapAsync = require('../utils/catchAsync');
 const components = require('../controllers/components');
+const { validateComponent } = require('../middleware');
 
-router.route('/').post(wrapAsync(components.createComponent));
+router
+	.route('/')
+	.post(validateComponent, wrapAsync(components.createComponent));
 
 router.route('/:category').get(wrapAsync(components.getCategoryComponents));
 
 router
 	.route('/:category/:id')
-	.put(wrapAsync(components.editComponent))
+	.put(validateComponent, wrapAsync(components.editComponent))
 	.delete(wrapAsync(components.deleteComponent));
 
 module.exports = router;

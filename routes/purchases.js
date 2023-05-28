@@ -2,12 +2,13 @@ const express = require('express');
 const router = express.Router();
 const wrapAsync = require('../utils/catchAsync');
 const purchases = require('../controllers/purchases');
+const { validatePurchase } = require('../middleware');
 
 router
 	.route('/')
 	.get(purchases.getPurchases)
-	.post(wrapAsync(purchases.createPurchase));
+	.post(validatePurchase, wrapAsync(purchases.createPurchase));
 
-router.route('/:id').put(wrapAsync(purchases.editPurchase));
+router.route('/:id').put(validatePurchase, wrapAsync(purchases.editPurchase));
 
 module.exports = router;
