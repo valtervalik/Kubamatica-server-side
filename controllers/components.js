@@ -13,18 +13,21 @@ module.exports.getCategoryComponents = async (req, res) => {
 };
 
 module.exports.createComponent = async (req, res) => {
+	const body = { ...req.body };
+	// Aplicar trim() a cada valor de cadena en body
+	Object.keys(body).forEach((key) => {
+		if (typeof body[key] === 'string') {
+			body[key] = body[key].trim();
+		}
+	});
 	const category = await Category.findOne({ category: req.body.category });
+	const serial = await Component.findOne({ serial: req.body.serial });
 	if (!category) {
 		res.json({ error: `La categoría no existe` });
+	} else if (serial) {
+		res.json({ error: `El número de serie debe ser único` });
 	} else {
 		// Crear una copia de req.body
-		const body = { ...req.body };
-		// Aplicar trim() a cada valor de cadena en body
-		Object.keys(body).forEach((key) => {
-			if (typeof body[key] === 'string') {
-				body[key] = body[key].trim();
-			}
-		});
 		const component = new Component(body);
 		category.components.push(component);
 		await component.save();
@@ -45,8 +48,13 @@ module.exports.editComponent = async (req, res) => {
 			body[key] = body[key].trim();
 		}
 	});
-	const newComponent = await Component.findByIdAndUpdate(id, body);
-	res.json({ message: `Componente modificado exitosamente` });
+	const serial = await Component.findOne({ serial: req.body.serial });
+	if (serial) {
+		res.json({ error: `El número de serie debe ser único` });
+	} else {
+		const newComponent = await Component.findByIdAndUpdate(id, body);
+		res.json({ message: `Componente modificado exitosamente` });
+	}
 };
 
 module.exports.deleteComponent = async (req, res) => {
