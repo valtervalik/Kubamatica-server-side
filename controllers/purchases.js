@@ -15,6 +15,11 @@ module.exports.createPurchase = async (req, res) => {
 		if (typeof body[key] === 'string') {
 			body[key] = body[key].trim();
 		}
+
+		if (key === 'price') {
+			// Convertir el valor de 'precio' en un número y aplicar toFixed(2)
+			body[key] = parseFloat(body[key]).toFixed(2);
+		}
 	});
 	const UniqueSerial = await Component.findOne({ serial: req.body.serial });
 	if (UniqueSerial) {
@@ -66,6 +71,11 @@ module.exports.editPurchase = async (req, res) => {
 	Object.keys(body).forEach((key) => {
 		if (typeof body[key] === 'string') {
 			body[key] = body[key].trim();
+		}
+
+		if (key === 'price') {
+			// Convertir el valor de 'precio' en un número y aplicar toFixed(2)
+			body[key] = parseFloat(body[key]).toFixed(2);
 		}
 	});
 	const UniqueSerial = await Component.findOne({ serial: req.body.serial });

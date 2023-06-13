@@ -16,6 +16,10 @@ module.exports.createRepair = async (req, res) => {
 		if (typeof body[key] === 'string') {
 			body[key] = body[key].trim();
 		}
+		if (key === 'price') {
+			// Convertir el valor de 'precio' en un número y aplicar toFixed(2)
+			body[key] = parseFloat(body[key]).toFixed(2);
+		}
 	});
 	const repair = new Repair(body);
 	await repair.save();
@@ -29,6 +33,11 @@ module.exports.editRepair = async (req, res) => {
 	Object.keys(body).forEach((key) => {
 		if (typeof body[key] === 'string') {
 			body[key] = body[key].trim();
+		}
+
+		if (key === 'price') {
+			// Convertir el valor de 'precio' en un número y aplicar toFixed(2)
+			body[key] = parseFloat(body[key]).toFixed(2);
 		}
 	});
 	const editRepair = await Repair.findByIdAndUpdate(id, body);

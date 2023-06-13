@@ -19,6 +19,11 @@ module.exports.createComponent = async (req, res) => {
 		if (typeof body[key] === 'string') {
 			body[key] = body[key].trim();
 		}
+
+		if (key === 'price') {
+			// Convertir el valor de 'precio' en un número y aplicar toFixed(2)
+			body[key] = parseFloat(body[key]).toFixed(2);
+		}
 	});
 	const category = await Category.findOne({ category: req.body.category });
 	const serial = await Component.findOne({ serial: req.body.serial });
@@ -46,6 +51,11 @@ module.exports.editComponent = async (req, res) => {
 	Object.keys(body).forEach((key) => {
 		if (typeof body[key] === 'string') {
 			body[key] = body[key].trim();
+		}
+
+		if (key === 'price') {
+			// Convertir el valor de 'precio' en un número y aplicar toFixed(2)
+			body[key] = parseFloat(body[key]).toFixed(2);
 		}
 	});
 	const serial = await Component.findOne({ serial: req.body.serial });
